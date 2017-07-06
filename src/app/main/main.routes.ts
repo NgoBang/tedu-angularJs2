@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { MainComponent } from './main.component';
 
-export const mainRoutes: Routes = [
+export const MainRoutes: Routes = [
     {
         // localhost:4200/main
         path: '',
