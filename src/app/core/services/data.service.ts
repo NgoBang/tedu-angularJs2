@@ -18,7 +18,10 @@ export class DataService {
     private _router: Router,
     private _authenService: AuthenService,
     private notificationSerice: NotificationService,
-    private utilityService: UtilityService) { }
+    private utilityService: UtilityService) {
+    this.headers = new Headers();
+    this.headers.append('Content-Type', 'application/json');
+  }
 
   private extractData(res: Response) {
     const body = res.json();
