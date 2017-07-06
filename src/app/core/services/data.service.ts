@@ -3,11 +3,12 @@ import { Http, Response, Headers } from '@angular/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { MessageContstants } from '../common/message.constants';
-import { SystemConstants } from '../common/system.constants';
 import { AuthenService } from './authen.service';
 import { NotificationService } from './notification.service';
 import { UtilityService } from './utility.service';
+import { MessageContstants } from '../common/message.constants';
+import { SystemConstants } from '../common/system.constants';
+
 
 @Injectable()
 export class DataService {
@@ -17,8 +18,8 @@ export class DataService {
     private _http: Http,
     private _router: Router,
     private _authenService: AuthenService,
-    private notificationSerice: NotificationService,
-    private utilityService: UtilityService) {
+    private _notificationSerice: NotificationService,
+    private _utilityService: UtilityService) {
     this.headers = new Headers();
     this.headers.append('Content-Type', 'application/json');
   }
@@ -67,13 +68,13 @@ export class DataService {
   public handleError(error: any) {
     if (error.status === 401) {
       localStorage.removeItem(SystemConstants.CURRENT_USER);
-      this.notificationSerice.printErrorMessage(MessageContstants.LOGIN_AGAIN_MSG);
-      this.utilityService.navigateToLogin();
+      this._notificationSerice.printErrorMessage(MessageContstants.LOGIN_AGAIN_MSG);
+      this._utilityService.navigateToLogin();
     } else {
       const errMsg = (error.message)
         ? error.message : error.status
           ? `${error.status} - ${error.statusText}` : 'Lỗi hệ thống';
-      this.notificationSerice.printErrorMessage(errMsg);
+      this._notificationSerice.printErrorMessage(errMsg);
       return Observable.throw(errMsg);
     }
   }

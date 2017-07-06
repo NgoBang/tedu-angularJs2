@@ -11,6 +11,7 @@ export class RoleComponent implements OnInit {
   public pageIndex = 1;
   public pageSize = 20;
   public pageDisplay = 10;
+  public totalRow: number;
   public filter = '';
   public roles: any[];
 
@@ -21,12 +22,20 @@ export class RoleComponent implements OnInit {
   }
 
   loadData() {
-    this._dataService.get('api/appRole/getlistpaging?page='
+    this._dataService.get('/api/appRole/getlistpaging?page='
       + this.pageIndex + '&pageSize='
       + this.pageSize + '&filter='
-      + this.filter + '')
+      + this.filter)
       .subscribe((response: any) => {
         this.roles = response.Items;
+        this.pageIndex = response.PageIndex;
+        this.pageSize = response.PageSize;
+        this.totalRow = response.TotalRows;
       });
+  }
+
+  pageChanged(event: any) {
+    this.pageIndex = event.page;
+    this.loadData();
   }
 }
