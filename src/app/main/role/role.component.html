@@ -42,7 +42,7 @@
               <td>{{role.Description}}</td>
               <td>
                 <button class="btn btn-primary" (click)="showEditModal(role.id)"><i class="fa fa-pencil-square-o"></i></button>
-                <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                <button class="btn btn-danger" (click)="deleteItem(role.id)"><i class="fa fa-trash"></i></button>
               </td>
             </tr>
           </tbody>
