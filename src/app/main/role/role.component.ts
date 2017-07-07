@@ -55,19 +55,19 @@ export class RoleComponent implements OnInit {
     this.loadData();
   }
 
-  showAddModal(id: any) {
+  showAddModal() {
     this.entity = {};
     this.modalAddEdit.show();
   }
 
-  showEditModal() {
-    this.entity = {};
+  showEditModal(id: any) {
+    this.loadRole(id);
     this.modalAddEdit.show();
   }
 
   saveChange(valid: boolean) {
     if (valid) {
-      if (this.entity === undefined) {
+      if (this.entity.Id === undefined) {
         this._dataService.post('/api/appRole/add', JSON.stringify(this.entity))
           .subscribe((response: any) => {
             this.loadData();
@@ -79,7 +79,7 @@ export class RoleComponent implements OnInit {
           .subscribe((response: any) => {
             this.loadData();
             this.modalAddEdit.hide();
-            this._notifycationService.printSuccessMessage(MessageContstants.CREATED_OK_MSG);
+            this._notifycationService.printSuccessMessage(MessageContstants.UPDATED_OK_MSG);
           }, error => this._dataService.handleError(error));
       }
     }
