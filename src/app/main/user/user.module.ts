@@ -6,6 +6,7 @@ import { UserComponent } from './user.component';
 
 import { DataService } from '../../core/services/data.service';
 import { NotificationService } from '../../core/services/notification.service';
+import { UploadService } from '../../core/services/upload.service';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
@@ -28,7 +29,7 @@ const userRoutes: Routes = [
     ModalModule.forRoot(),
     RouterModule.forChild(userRoutes)
   ],
-  providers: [DataService, NotificationService],
+  providers: [DataService, NotificationService, UploadService],
   declarations: [UserComponent]
 })
 export class UserModule { }
