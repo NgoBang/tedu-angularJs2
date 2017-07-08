@@ -75,7 +75,6 @@ export class UserComponent implements OnInit {
     this._dataService.get('/api/appUser/detail/' + id)
       .subscribe((response: any) => {
         this.entity = response;
-        console.log(this.entity);
         for (const role of this.entity.Roles) {
           this.myRoles.push(role);
         }
@@ -149,5 +148,9 @@ export class UserComponent implements OnInit {
 
   selectGender(event) {
     this.entity.Gender = event.target.value;
+  }
+
+  public selectedDate(value: any) {
+    this.entity.BirthDay = moment(value.end._d).format('DD/MM/YYYY');
   }
 }
