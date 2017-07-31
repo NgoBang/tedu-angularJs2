@@ -1,6 +1,8 @@
+import { UtilityService } from '../../core/services/utility.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
+import { AuthenService } from '../../core/services/authen.service';
 import { DataService } from '../../core/services/data.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { UploadService } from '../../core/services/upload.service';
@@ -41,7 +43,14 @@ export class UserComponent implements OnInit {
   constructor(
     private _dataService: DataService,
     private _notifycationService: NotificationService,
-    private _uploadService: UploadService) { }
+    private _uploadService: UploadService,
+    public _utilityService: UtilityService,
+    public _authenService: AuthenService
+  ) {
+    if (_authenService.checkAccess('USER') === false) {
+      _utilityService.navigateToLogin();
+    }
+  }
 
   ngOnInit() {
     this.loadRoles();
@@ -75,6 +84,7 @@ export class UserComponent implements OnInit {
     this._dataService.get('/api/appUser/detail/' + id)
       .subscribe((response: any) => {
         this.entity = response;
+        this.myRoles = [];
         for (const role of this.entity.Roles) {
           this.myRoles.push(role);
         }
