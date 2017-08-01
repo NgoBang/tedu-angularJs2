@@ -3,49 +3,71 @@
   "project": {
     "name": "tedushop-angular2"
   },
-  "apps": [{
-    "root": "src",
-    "outDir": "dist",
-    "assets": [
-      "assets",
-      "favicon.ico"
-    ],
-    "index": "index.html",
-    "main": "main.ts",
-    "polyfills": "polyfills.ts",
-    "test": "test.ts",
-    "tsconfig": "tsconfig.app.json",
-    "testTsconfig": "tsconfig.spec.json",
-    "prefix": "app",
-    "styles": [
-      "../node_modules/bootstrap/dist/css/bootstrap.min.css",
-      "../node_modules/font-awesome/css/font-awesome.css",
-      "../node_modules/animate.css/animate.css",
-      "../src/assets/css/custom.css",
-      "../node_modules/alertifyjs/build/css/alertify.css",
-      "../node_modules/alertifyjs/build/css/themes/default.css",
-      "styles.css"
-    ],
-    "scripts": [
-      "../node_modules/jquery/dist/jquery.min.js",
-      "../node_modules/bootstrap/dist/js/bootstrap.min.js",
-      "../node_modules/fastclick/lib/fastclick.js",
-      "../node_modules/nprogress/nprogress.js",
-      "../node_modules/alertifyjs/build/alertify.js",
-       "../node_modules/moment/moment.js"
-    ],
-    "environmentSource": "environments/environment.ts",
-    "environments": {
-      "dev": "environments/environment.ts",
-      "prod": "environments/environment.prod.ts"
+  "apps": [
+    {
+      "root": "src",
+      "outDir": "dist",
+      "assets": [
+        "assets",
+        "favicon.ico"
+      ],
+      "index": "index.html",
+      "main": "main.ts",
+      "polyfills": "polyfills.ts",
+      "test": "test.ts",
+      "tsconfig": "tsconfig.app.json",
+      "testTsconfig": "tsconfig.spec.json",
+      "prefix": "app",
+      "styles": [
+        "../node_modules/bootstrap/dist/css/bootstrap.min.css",
+        "../node_modules/font-awesome/css/font-awesome.css",
+        "../node_modules/animate.css/animate.css",
+        "../src/assets/css/custom.css",
+        "../node_modules/alertifyjs/build/css/alertify.css",
+        "../node_modules/alertifyjs/build/css/themes/default.css",
+        "styles.css"
+      ],
+      "scripts": [
+        "../node_modules/jquery/dist/jquery.min.js",
+        "../node_modules/bootstrap/dist/js/bootstrap.min.js",
+        "../node_modules/fastclick/lib/fastclick.js",
+        "../node_modules/nprogress/nprogress.js",
+        "../node_modules/alertifyjs/build/alertify.js",
+        "../node_modules/moment/moment.js",
+        "../node_modules/tinymce/tinymce.js",
+        "../node_modules/tinymce/themes/modern/theme.js",
+        "../node_modules/tinymce/plugins/link/plugin.js",
+        "../node_modules/tinymce/plugins/paste/plugin.js",
+        "../node_modules/tinymce/plugins/table/plugin.js",
+        "../node_modules/tinymce/plugins/autosave/plugin.js",
+        "../node_modules/tinymce/plugins/autolink/plugin.js",
+        "../node_modules/tinymce/plugins/code/plugin.js",
+        "../node_modules/tinymce/plugins/codesample/plugin.js",
+        "../node_modules/tinymce/plugins/colorpicker/plugin.js",
+        "../node_modules/tinymce/plugins/emoticons/plugin.js",
+        "../node_modules/tinymce/plugins/fullscreen/plugin.js",
+        "../node_modules/tinymce/plugins/hr/plugin.js",
+        "../node_modules/tinymce/plugins/image/plugin.js",
+        "../node_modules/tinymce/plugins/imagetools/plugin.js",
+        "../node_modules/tinymce/plugins/media/plugin.js",
+        "../node_modules/tinymce/plugins/preview/plugin.js",
+        "../node_modules/tinymce/plugins/wordcount/plugin.js",
+        "../node_modules/tinymce/plugins/textcolor/plugin.js"
+      ],
+      "environmentSource": "environments/environment.ts",
+      "environments": {
+        "dev": "environments/environment.ts",
+        "prod": "environments/environment.prod.ts"
+      }
     }
-  }],
+  ],
   "e2e": {
     "protractor": {
       "config": "./protractor.conf.js"
     }
   },
-  "lint": [{
+  "lint": [
+    {
       "project": "src/tsconfig.app.json"
     },
     {

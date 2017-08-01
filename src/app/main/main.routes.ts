@@ -18,7 +18,9 @@ export const MainRoutes: Routes = [
             // localhost:4200/main/function
             { path: 'function', loadChildren: './function/function.module#FunctionModule' },
 
-            { path: 'product-category', loadChildren: './product-category/product-category.module#ProductCategoryModule' }
+            { path: 'product-category', loadChildren: './product-category/product-category.module#ProductCategoryModule' },
+
+            { path: 'product', loadChildren: './product/product.module#ProductModule' }
         ]
     }
 ]
