@@ -34,10 +34,20 @@ export class ProductComponent implements OnInit {
   public checkedItems: any[];
 
   /*Product manage */
-  public imageEntity: any = {};
-  public productImages: any = [];
   @ViewChild('imageManageModal') public imageManageModal: ModalDirective;
   @ViewChild('imagePath') imagePath;
+  public imageEntity: any = {};
+  public productImages: any = [];
+
+
+  /*Quantity manage */
+  @ViewChild('quantityManageModal') public quantityManageModal: ModalDirective;
+  public quantityEntity: any = {};
+  public productQuantities: any = [];
+  public sizeId: number = null;
+  public colorId: number = null;
+  public colors: any[];
+  public sizes: any[];
 
   constructor(
     public _authenService: AuthenService,
@@ -83,25 +93,28 @@ export class ProductComponent implements OnInit {
 
   // Show edit form
   public showEdit(id: string) {
-    this._dataService.get('/api/product/detail/' + id).subscribe((response: any) => {
-      this.entity = response;
-      this.addEditModal.show();
-    }, error => this._dataService.handleError(error));
+    this._dataService.get('/api/product/detail/' + id)
+      .subscribe((response: any) => {
+        this.entity = response;
+        this.addEditModal.show();
+      }, error => this._dataService.handleError(error));
   }
 
   public delete(id: string) {
     this.notificationService.printConfirmationDialog(MessageContstants.CONFIRM_DELETE_MSG, () => {
-      this._dataService.delete('/api/product/delete', 'id', id).subscribe((response: any) => {
-        this.notificationService.printSuccessMessage(MessageContstants.DELETED_OK_MSG);
-        this.search();
-      }, error => this._dataService.handleError(error));
+      this._dataService.delete('/api/product/delete', 'id', id)
+        .subscribe((response: any) => {
+          this.notificationService.printSuccessMessage(MessageContstants.DELETED_OK_MSG);
+          this.search();
+        }, error => this._dataService.handleError(error));
     });
   }
 
   private loadProductCategories() {
-    this._dataService.get('/api/productCategory/getallhierachy').subscribe((response: any[]) => {
-      this.productCategories = response;
-    }, error => this._dataService.handleError(error));
+    this._dataService.get('/api/productCategory/getallhierachy')
+      .subscribe((response: any[]) => {
+        this.productCategories = response;
+      }, error => this._dataService.handleError(error));
   }
 
   // Save change for modal popup
@@ -109,11 +122,12 @@ export class ProductComponent implements OnInit {
     if (valid) {
       const fi = this.thumbnailImage.nativeElement;
       if (fi.files.length > 0) {
-        this.uploadService.postWithFile('/api/upload/saveImage?type=product', null, fi.files).then((imageUrl: string) => {
-          this.entity.ThumbnailImage = imageUrl;
-        }).then(() => {
-          this.saveData();
-        });
+        this.uploadService.postWithFile('/api/upload/saveImage?type=product', null, fi.files)
+          .then((imageUrl: string) => {
+            this.entity.ThumbnailImage = imageUrl;
+          }).then(() => {
+            this.saveData();
+          });
       } else {
         this.saveData();
       }
@@ -122,17 +136,19 @@ export class ProductComponent implements OnInit {
 
   private saveData() {
     if (this.entity.ID === undefined) {
-      this._dataService.post('/api/product/add', JSON.stringify(this.entity)).subscribe((response: any) => {
-        this.search();
-        this.addEditModal.hide();
-        this.notificationService.printSuccessMessage(MessageContstants.CREATED_OK_MSG);
-      });
+      this._dataService.post('/api/product/add', JSON.stringify(this.entity))
+        .subscribe((response: any) => {
+          this.search();
+          this.addEditModal.hide();
+          this.notificationService.printSuccessMessage(MessageContstants.CREATED_OK_MSG);
+        });
     } else {
-      this._dataService.put('/api/product/update', JSON.stringify(this.entity)).subscribe((response: any) => {
-        this.search();
-        this.addEditModal.hide();
-        this.notificationService.printSuccessMessage(MessageContstants.UPDATED_OK_MSG);
-      }, error => this._dataService.handleError(error));
+      this._dataService.put('/api/product/update', JSON.stringify(this.entity))
+        .subscribe((response: any) => {
+          this.search();
+          this.addEditModal.hide();
+          this.notificationService.printSuccessMessage(MessageContstants.UPDATED_OK_MSG);
+        }, error => this._dataService.handleError(error));
     }
   }
 
@@ -202,5 +218,66 @@ export class ProductComponent implements OnInit {
           });
       }
     }
+  }
+
+  /*Quản lý số lượng */
+  public showQuantityManage(id: number) {
+    this.quantityEntity = {
+      ProductId: id
+    };
+    this.loadColors();
+    this.loadSizes();
+    this.loadProductQuantities(id);
+    this.quantityManageModal.show();
+  }
+
+  public loadColors() {
+    this._dataService.get('/api/productQuantity/getcolors')
+      .subscribe((response: any[]) => {
+        this.colors = response;
+      }, error => this._dataService.handleError(error));
+  }
+
+  public loadSizes() {
+    this._dataService.get('/api/productQuantity/getsizes')
+      .subscribe((response: any[]) => {
+        this.sizes = response;
+      }, error => this._dataService.handleError(error));
+  }
+
+  public loadProductQuantities(id: number) {
+    this._dataService.get('/api/productQuantity/getall?productId=' + id + '&sizeId=' + this.sizeId + '&colorId=' + this.colorId)
+      .subscribe((response: any[]) => {
+        this.productQuantities = response;
+      }, error => this._dataService.handleError(error));
+  }
+
+  public saveProductQuantity(isValid: boolean) {
+    if (isValid) {
+      this._dataService.post('/api/productQuantity/add', JSON.stringify(this.quantityEntity))
+        .subscribe((response: any) => {
+          this.loadProductQuantities(this.quantityEntity.ProductId);
+          this.quantityEntity = {
+            ProductId: this.quantityEntity.ProductId
+          };
+          this.notificationService.printSuccessMessage(MessageContstants.CREATED_OK_MSG);
+        }, error => this._dataService.handleError(error));
+    }
+  }
+
+  public deleteQuantity(productId: number, colorId: string, sizeId: string) {
+    const parameters = {
+      'productId': productId,
+      'sizeId': sizeId,
+      'colorId': colorId
+    };
+
+    this.notificationService.printConfirmationDialog(MessageContstants.CONFIRM_DELETE_MSG, () => {
+      this._dataService.deleteWithMultiParams('/api/productQuantity/delete', parameters)
+        .subscribe((response: any) => {
+          this.notificationService.printSuccessMessage(MessageContstants.DELETED_OK_MSG);
+          this.loadProductQuantities(productId);
+        }, error => this._dataService.handleError(error));
+    });
   }
 }

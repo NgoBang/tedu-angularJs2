@@ -18,7 +18,7 @@ export class DataService {
     private _http: Http,
     private _router: Router,
     private _authenService: AuthenService,
-    private _notificationSerice: NotificationService,
+    private _notificationService: NotificationService,
     private _utilityService: UtilityService) {
     this.headers = new Headers();
     this.headers.append('Content-Type', 'application/json');
@@ -57,6 +57,19 @@ export class DataService {
       .map(this.extractData);
   }
 
+  deleteWithMultiParams(uri: string, params) {
+    this.headers.delete('Authorization');
+
+    this.headers.append('Authorization', 'Bearer ' + this._authenService.getLoggedInUser().access_token);
+    let paramStr = '';
+    for (const param of Object.keys(params)) {
+      paramStr += param + '=' + params[param] + '&';
+    }
+    return this._http.delete(SystemConstants.BASE_API + uri + '/?' + paramStr, { headers: this.headers })
+      .map(this.extractData);
+
+  }
+
   postFile(uri: string, data?: any) {
     const newHeader = new Headers();
     newHeader.delete('Authorization');
@@ -68,13 +81,16 @@ export class DataService {
   public handleError(error: any) {
     if (error.status === 401) {
       localStorage.removeItem(SystemConstants.CURRENT_USER);
-      this._notificationSerice.printErrorMessage(MessageContstants.LOGIN_AGAIN_MSG);
+      this._notificationService.printErrorMessage(MessageContstants.LOGIN_AGAIN_MSG);
+      this._utilityService.navigateToLogin();
+    } else if (error.status === 403) {
+      localStorage.removeItem(SystemConstants.CURRENT_USER);
+      this._notificationService.printErrorMessage(MessageContstants.FORBIDDEN);
       this._utilityService.navigateToLogin();
     } else {
-      const errMsg = (error.message)
-        ? error.message : error.status
-          ? `${error.status} - ${error.statusText}` : 'Lỗi hệ thống';
-      this._notificationSerice.printErrorMessage(errMsg);
+      const errMsg = JSON.parse(error._body).Message;
+      this._notificationService.printErrorMessage(errMsg);
+
       return Observable.throw(errMsg);
     }
   }
