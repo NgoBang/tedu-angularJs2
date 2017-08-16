@@ -20,7 +20,9 @@ export const MainRoutes: Routes = [
 
             { path: 'product-category', loadChildren: './product-category/product-category.module#ProductCategoryModule' },
 
-            { path: 'product', loadChildren: './product/product.module#ProductModule' }
+            { path: 'product', loadChildren: './product/product.module#ProductModule' },
+
+            { path: 'order', loadChildren: './order/order.module#OrderModule' }
         ]
     }
 ]
