@@ -1,5 +1,6 @@
 import { UtilityService } from '../../core/services/utility.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import { AuthenService } from '../../core/services/authen.service';
@@ -108,8 +109,8 @@ export class UserComponent implements OnInit {
     this.modalAddEdit.show();
   }
 
-  saveChange(valid: boolean) {
-    if (valid) {
+  saveChange(form: NgForm) {
+    if (form.valid) {
       this.entity.Roles = this.myRoles;
       const fi = this.avatar.nativeElement;
       if (fi.files.length > 0) {
@@ -120,17 +121,18 @@ export class UserComponent implements OnInit {
             this.saveData();
           })
       } else {
-        this.saveData();
+        this.saveData(form);
       }
     }
   }
 
-  saveData() {
+  saveData(form: NgForm) {
     if (this.entity.Id === undefined) {
       this._dataService.post('/api/appUser/add', JSON.stringify(this.entity))
         .subscribe((response: any) => {
           this.loadData();
           this.modalAddEdit.hide();
+          form.resetForm();
           this._notifycationService.printSuccessMessage(MessageContstants.CREATED_OK_MSG);
         }, error => this._dataService.handleError(error));
     } else {
@@ -138,6 +140,7 @@ export class UserComponent implements OnInit {
         .subscribe((response: any) => {
           this.loadData();
           this.modalAddEdit.hide();
+          form.resetForm();
           this._notifycationService.printSuccessMessage(MessageContstants.UPDATED_OK_MSG);
         }, error => this._dataService.handleError(error));
     }

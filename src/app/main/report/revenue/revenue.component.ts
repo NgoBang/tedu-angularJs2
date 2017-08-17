@@ -1,0 +1,106 @@
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { DataService } from '../../../core/services/data.service';
+import { BaseChartDirective } from 'ng2-charts/ng2-charts';
+
+@Component({
+  selector: 'app-revenue',
+  templateUrl: './revenue.component.html',
+  styleUrls: ['./revenue.component.css']
+})
+
+export class RevenueComponent implements OnInit {
+  public fromDate = '';
+  public toDate = '';
+  public tableData: any[];
+
+  public lineChartLegend = true;
+  public lineChartType = 'line';
+  public lineChartLabels: Array<any> = [];
+
+  // lineChart
+  public lineChartData: Array<any> = [
+    { data: [], label: 'Lợi nhuận' },
+    { data: [], label: 'Doanh thu' }
+  ];
+
+  public lineChartOptions: any = {
+    responsive: true
+  };
+
+  public lineChartColors: Array<any> = [
+    { // grey
+      backgroundColor: 'rgba(148,159,177,0.2)',
+      borderColor: 'rgba(148,159,177,1)',
+      pointBackgroundColor: 'rgba(148,159,177,1)',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+    },
+    { // dark grey
+      backgroundColor: 'rgba(77,83,96,0.2)',
+      borderColor: 'rgba(77,83,96,1)',
+      pointBackgroundColor: 'rgba(77,83,96,1)',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: 'rgba(77,83,96,1)'
+    },
+    { // grey
+      backgroundColor: 'rgba(148,159,177,0.2)',
+      borderColor: 'rgba(148,159,177,1)',
+      pointBackgroundColor: 'rgba(148,159,177,1)',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+    }
+  ];
+
+  @ViewChild(BaseChartDirective) chart: BaseChartDirective;
+
+  constructor(private _dataService: DataService) {
+  }
+
+  // events
+  public chartClicked(e: any): void {
+    console.log(e);
+  }
+
+  public chartHovered(e: any): void {
+    console.log(e);
+  }
+  ngOnInit() {
+    this.loadRevenues();
+  }
+  refreshChart() {
+    setTimeout(() => {
+
+      if (this.chart && this.chart.chart && this.chart.chart.config) {
+        this.chart.chart.config.data.labels = this.lineChartLabels;
+        this.chart.chart.config.data.datasets = this.lineChartData;
+        this.chart.chart.update();
+      }
+    });
+  }
+  loadRevenues() {
+    this._dataService.get('/api/statistic/getrevenue?fromDate=' + this.fromDate + '&toDate=' + this.toDate)
+      .subscribe((response: any[]) => {
+        this.lineChartLabels = [];
+        this.lineChartData = [];
+        const revenue = { data: [], label: 'Doanh thu' };
+        const benefit = { data: [], label: 'Lợi nhuận' };
+        this.tableData = [];
+        for (const item of response) {
+          revenue.data.push(item.Benefit);
+          benefit.data.push(item.Revenues);
+          this.lineChartLabels.push(moment(item.Date).format('DD/MM/YYYY'));
+          // push to table
+          this.tableData = response;
+
+        }
+        this.lineChartData.push(revenue);
+        this.lineChartData.push(benefit);
+
+        this.refreshChart();
+      });
+
+  }
+}
