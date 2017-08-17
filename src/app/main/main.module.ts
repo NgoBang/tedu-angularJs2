@@ -10,6 +10,8 @@ import { SidebarMenuComponent } from '../shared/sidebar-menu/sidebar-menu.compon
 import { UserModule } from './user/user.module';
 import { AuthenService } from '../core/services/authen.service';
 import { UtilityService } from '../core/services/utility.service';
+import { SignalrService } from './../core/services/signalr.service';
+
 
 @NgModule({
   declarations: [
@@ -23,6 +25,6 @@ import { UtilityService } from '../core/services/utility.service';
     HomeModule,
     RouterModule.forChild(MainRoutes)
   ],
-  providers: [AuthenService, UtilityService]
+  providers: [AuthenService, UtilityService, SignalrService]
 })
 export class MainModule { }
