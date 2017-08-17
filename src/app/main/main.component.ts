@@ -13,6 +13,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainComponent implements OnInit {
   public user: LoggedInUser;
+  public baseFolder: string = SystemConstants.BASE_API;
 
   constructor(
     private utilityService: UtilityService,

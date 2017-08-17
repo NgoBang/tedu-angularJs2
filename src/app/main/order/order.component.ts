@@ -83,6 +83,6 @@ export class OrderComponent implements OnInit {
   }
 
   public changeEndDate(value: any) {
-    this.filterEndDate = moment(new Date(value.end._d)).format('DD/MM/YYYY');
-  }
+  this.filterEndDate = moment(new Date(value.end._d)).format('DD/MM/YYYY');
+}
 }

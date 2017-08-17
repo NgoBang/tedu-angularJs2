@@ -4,8 +4,8 @@ import { AuthenService } from '../../core/services/authen.service';
 import { SystemConstants } from '../../core/common/system.constants';
 import { SignalrService } from '../../core/services/signalr.service';
 import { DataService } from '../../core/services/data.service';
-import { UtilityService } from '../core/services/utility.service';
-
+import { UtilityService } from './../../core/services/utility.service';
+import { UrlConstants } from './../../core/common/url.constants';
 
 @Component({
   selector: 'app-top-menu',
@@ -38,7 +38,7 @@ export class TopMenuComponent implements OnInit {
 
   logout() {
     localStorage.removeItem(SystemConstants.CURRENT_USER);
-    this.utilityService.navigate(UrlConstants.LOGIN);
+    this._utilityService.navigate(UrlConstants.LOGIN);
   }
 
   private subscribeToEvents(): void {
