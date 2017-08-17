@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataService } from '../../../core/services/data.service';
+import { SystemConstants } from './../../../core/common/system.constants';
 
 import { NotificationService } from '../../../core/services/notification.service';
 import { UtilityService } from '../../../core/services/utility.service';
@@ -18,6 +19,9 @@ export class OrderDetailComponent implements OnInit {
   public entity: any;
   public totalAmount: number;
 
+  public orderId: number;
+  public baseFolder: string = SystemConstants.BASE_API;
+
   constructor(
     private utilityService: UtilityService,
     private _dataService: DataService,
@@ -28,9 +32,9 @@ export class OrderDetailComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.params
       .subscribe((params: Params) => {
-        const orderId = params['id'];
-        this.loadOrder(params['id']);
-        this.loadOrderDetail(params['id']);
+        this.orderId = params['id'];
+        this.loadOrder(this.orderId);
+        this.loadOrderDetail(this.orderId);
       });
   }
 
@@ -55,6 +59,14 @@ export class OrderDetailComponent implements OnInit {
           this.totalAmount = this.totalAmount + (item.Quantity * item.Price);
         }
         console.log(this.totalAmount);
+      }, error => this._dataService.handleError(error));
+  }
+
+  public exportToExcel() {
+    this._dataService.get('/api/order/exportExcel/' + this.orderId.toString())
+      .subscribe((response: any) => {
+        console.log(response);
+        window.open(this.baseFolder + response.Message);
       }, error => this._dataService.handleError(error));
   }
 }
